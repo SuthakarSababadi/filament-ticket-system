@@ -2,26 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
 
-class CategoryResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -31,17 +27,17 @@ class CategoryResource extends Resource
             ->schema([
                 TextInput::make('name')
                 ->required()
-                ->unique()
-                ->lazy()
-                ->autofocus()
-                ->afterStateUpdated(function(Set $set, ?string $state) {
-                    $set('slug', Str::slug($state));
-                }),
+                ->autofocus(),
 
-                TextInput::make('slug')
-                ->required(),
+                TextInput::make('email')
+                ->required()
+                ->email()
+                ->unique(ignoreRecord:true),
 
-                Toggle::make('is_active')->default(false),
+                TextInput::make('password')
+                ->password()
+                ->required()
+                ->minLength(6),
 
             ]);
     }
@@ -50,13 +46,13 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-               TextColumn::make('name')
-               ->searchable()
-               ->sortable(),
+                TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
 
-               TextColumn::make('slug'),
-               ToggleColumn::make('is_active')
-               ->label('Status'),
+                TextColumn::make('email')
+                ->searchable()
+
             ])
             ->filters([
                 //
@@ -82,9 +78,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }
