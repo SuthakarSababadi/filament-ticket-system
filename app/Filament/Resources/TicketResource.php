@@ -2,22 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\TicketResource\Pages;
+use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Filament\Resources\TicketResource\RelationManagers\CategoriesRelationManager;
 use App\Models\Ticket;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
+use Filament\Forms;
 
-use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
-use App\Filament\Resources\TicketResource\Pages;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TicketResource\RelationManagers;
 
 class TicketResource extends Resource
 {
@@ -38,15 +39,18 @@ class TicketResource extends Resource
                 ->rows(3),
 
                 Select::make('status')
-                ->options(Ticket::STATUS)
-                ->required(),
+                ->options(self::$model::STATUS)
+                ->required()
+                ->in(Ticket::STATUS),
 
                 Select::make('priority')
-                ->options(Ticket::PRIORITY)
-                ->required(),
+                ->options(self::$model::PRIORITY)
+                ->required()
+                ->in(Ticket::PRIORITY),
 
                 Select::make('assigned_to')
-                ->relationship('assignedTo','name'),
+                ->relationship('assignedTo','name')
+                ->required(),
 
                 Textarea::make('comment')
                 ->rows(3),
@@ -90,7 +94,7 @@ class TicketResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CategoriesRelationManager::class
         ];
     }
 

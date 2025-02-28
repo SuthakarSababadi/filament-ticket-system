@@ -14,4 +14,8 @@ class Category extends Model
         'slug',
         'is_active',
     ];
+
+    public function tickets(){
+        return $this->belongsToMany(Ticket::class);
+    }
 }
