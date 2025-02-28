@@ -7,11 +7,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "codeat3/blade-solar-icons": "^1.2",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "laraveldaily/laravel-invoices": "^4.0",
         "maatwebsite/excel": "^3.1",
+        "postare/blade-mdi": "^1.1",
         "simplesoftwareio/simple-qrcode": "~4"
     },
     "require-dev": {

@@ -2,27 +2,28 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TicketResource\Pages;
-use App\Filament\Resources\TicketResource\RelationManagers;
-use App\Models\Ticket;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Ticket;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\TextInputColumn;
+use App\Filament\Resources\TicketResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TicketResource\RelationManagers;
 
 class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-ticket';
 
     public static function form(Form $form): Form
     {
@@ -65,12 +66,11 @@ class TicketResource extends Resource
 
                 TextColumn::make('status')->badge(),
                 TextColumn::make('priority')->badge(),
-                TextColumn::make('assignedTo.name')
+                TextColumn::make('assignedTo.name'),
+                TextInputColumn::make('comment')
 
                 ->searchable()
                 ->sortable(),
-
-
 
             ])
             ->filters([
@@ -78,6 +78,7 @@ class TicketResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
