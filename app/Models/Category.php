@@ -18,4 +18,9 @@ class Category extends Model
     public function tickets(){
         return $this->belongsToMany(Ticket::class);
     }
+
+    public function scopeActive( Builder $query)
+    {
+        return $query->where('is_active', true);
+    }
 }

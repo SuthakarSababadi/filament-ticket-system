@@ -5,9 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TicketResource\Pages;
 use App\Filament\Resources\TicketResource\RelationManagers;
 use App\Filament\Resources\TicketResource\RelationManagers\CategoriesRelationManager;
+use App\Models\Role;
 use App\Models\Ticket;
-use Filament\Forms;
 
+use App\Models\User;
+use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -16,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -49,7 +52,11 @@ class TicketResource extends Resource
                 ->in(Ticket::PRIORITY),
 
                 Select::make('assigned_to')
-                ->relationship('assignedTo','name')
+                ->options(
+                    User::whereHas('roles', function (Builder $query) {
+                        $query->where('name', Role::ROLES['Agent']);
+                    })->pluck('name', 'id' )->toArray()
+                )
                 ->required(),
 
                 Textarea::make('comment')
@@ -62,9 +69,13 @@ class TicketResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
+            ->modifyQueryUsing (fn (Builder $query) =>
+                auth()->user()->hasRole(Role::ROLES['Admin']) ? $query : $query->where('assigned_to', auth()->user()->id)
+            )
             ->columns([
                 TextColumn::make('title')
-                ->description(fn (Ticket $record): string => $record->description)
+                ->description(fn (Ticket $record): ?string => $record?->description)
                 ->searchable()
                 ->sortable(),
 
@@ -76,9 +87,20 @@ class TicketResource extends Resource
                 ->searchable()
                 ->sortable(),
 
+                TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                ->options(self::$model::STATUS)
+                ->placeholder('Filter by status'),
+
+                SelectFilter::make('priority')
+                ->options(self::$model::PRIORITY)
+                ->placeholder('Filter by priority')
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

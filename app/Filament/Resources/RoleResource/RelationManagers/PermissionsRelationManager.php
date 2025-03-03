@@ -1,29 +1,28 @@
 <?php
 
-namespace App\Filament\Resources\TicketResource\RelationManagers;
+namespace App\Filament\Resources\RoleResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-
-class CategoriesRelationManager extends RelationManager
+class PermissionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'categories';
+    protected static string $relationship = 'permissions';
 
     public function form(Form $form): Form
     {
-        // return $form
-        //     ->schema([
-        //         Forms\Components\TextInput::make('name')
-        //             ->required()
-        //             ->maxLength(255),
-        //     ]);
+      //  return $form
+            // ->schema([
+            //     Forms\Components\TextInput::make('name')
+            //         ->required()
+            //         ->maxLength(255),
+
+            // ]);
     }
 
     public function table(Table $table): Table
@@ -32,19 +31,12 @@ class CategoriesRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('slug'),
-                ToggleColumn::make('is_active')
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
-                ->recordSelectOptionsQuery(function (Builder $query) {
-                    return $query->where('is_active', true);
-                })
-                ->preloadRecordSelect(),
-
+                Tables\Actions\AttachAction::make()->preloadRecordSelect(),
             ])
             ->actions([
            //     Tables\Actions\EditAction::make(),

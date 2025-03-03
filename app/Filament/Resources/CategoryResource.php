@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -23,7 +24,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-c-credit-card';
+    protected static ?string $navigationIcon = 'heroicon-O-funnel';
 
     public static function form(Form $form): Form
     {
@@ -31,7 +32,7 @@ class CategoryResource extends Resource
             ->schema([
                 TextInput::make('name')
                 ->required()
-                ->unique()
+                ->unique(ignoreRecord:true)
                 ->lazy()
                 ->autofocus()
                 ->afterStateUpdated(function(Set $set, ?string $state) {
@@ -56,7 +57,8 @@ class CategoryResource extends Resource
 
                TextColumn::make('slug'),
                ToggleColumn::make('is_active')
-               ->label('Status'),
+               ->label('Status')
+               ->disabled(!auth()->user()->hasPermission('category_edit'))
             ])
             ->filters([
                 //
@@ -67,7 +69,7 @@ class CategoryResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->hidden(!auth()->user()->hasPermission('category_delete')),
                 ]),
             ]);
     }
@@ -83,8 +85,8 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            // 'create' => Pages\CreateCategory::route('/create'),
+            // 'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }
