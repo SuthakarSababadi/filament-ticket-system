@@ -79,8 +79,21 @@ class TicketResource extends Resource
                 ->searchable()
                 ->sortable(),
 
-                TextColumn::make('status')->badge(),
-                TextColumn::make('priority')->badge(),
+                TextColumn::make('status')
+                ->badge()
+                ->colors ([
+                    'success' => Ticket::STATUS['Closed'],
+                    'warning' => Ticket::STATUS['Archived'],
+                    'danger' => Ticket::STATUS['Open'],
+                ]),        
+               
+                TextColumn::make('priority')->badge()
+                ->colors ([
+                    'success' => Ticket::PRIORITY['Low'],
+                    'warning' => Ticket::PRIORITY['Medium'],
+                    'danger' => Ticket::PRIORITY['High'],
+                ]), 
+
                 TextColumn::make('assignedTo.name'),
                 TextInputColumn::make('comment')
 
