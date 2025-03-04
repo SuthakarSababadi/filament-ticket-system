@@ -16,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -79,20 +80,25 @@ class TicketResource extends Resource
                 ->searchable()
                 ->sortable(),
 
-                TextColumn::make('status')
-                ->badge()
-                ->colors ([
-                    'success' => Ticket::STATUS['Closed'],
-                    'warning' => Ticket::STATUS['Archived'],
-                    'danger' => Ticket::STATUS['Open'],
-                ]),        
-               
+                SelectColumn::make('status')
+                ->options(self::$model::STATUS),
+
+
+
+                // TextColumn::make('status')
+                // ->badge()
+                // ->colors ([
+                //     'success' => Ticket::STATUS['Closed'],
+                //     'warning' => Ticket::STATUS['Archived'],
+                //     'danger' => Ticket::STATUS['Open'],
+                // ]),
+
                 TextColumn::make('priority')->badge()
                 ->colors ([
                     'success' => Ticket::PRIORITY['Low'],
                     'warning' => Ticket::PRIORITY['Medium'],
                     'danger' => Ticket::PRIORITY['High'],
-                ]), 
+                ]),
 
                 TextColumn::make('assignedTo.name'),
                 TextInputColumn::make('comment')

@@ -11,8 +11,12 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestTickets extends BaseWidget
 {
+    protected int | string | array $columnSpan = 'full';
+    protected static ?int $sort = 2;
+
     public function table(Table $table): Table
     {
+
         return $table
             ->query(
                 auth()->user()->hasRole(Role::ROLES['Admin']) ? Ticket::query() : Ticket::query()->where('assigned_to', auth()->user()->id)
