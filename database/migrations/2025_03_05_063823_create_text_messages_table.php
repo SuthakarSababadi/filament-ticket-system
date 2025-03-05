@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('response')->nullable();
             $table->foreignId('sent_to')->constrained('users');
             $table->foreignId('sent_by')->constrained('users');
-            $table->enum('status',TextMessage::STATUS)->default(TextMessage::STATUS['Pending']);
+            $table->enum('status',TextMessage::STATUS)->default('Pending');
             $table->text('remarks');
             $table->timestamps();
         });
