@@ -17,7 +17,7 @@ class TicketObserver
 
          Notification::make()
              ->title('A ticket hase been assigned to you')
-             ->sendToDatabase($agent);
+             ->toDatabase($agent);
 
     }
 
