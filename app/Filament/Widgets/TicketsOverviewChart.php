@@ -13,6 +13,8 @@ class TicketsOverviewChart extends ChartWidget
 
     public ?string $filter = 'week';
 
+    protected static ?int $sort = 2;
+
     protected function getFilters(): ?array
 {
     return [
