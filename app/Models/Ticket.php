@@ -15,7 +15,8 @@ class Ticket extends Model
         'assigned_to',
         'assigned_by',
         'comment',
-        'is_resolved'
+        'is_resolved',
+        'attachment',
 
     ];
 
