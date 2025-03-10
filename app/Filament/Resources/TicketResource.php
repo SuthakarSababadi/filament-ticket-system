@@ -84,16 +84,6 @@ class TicketResource extends Resource
                 SelectColumn::make('status')
                 ->options(self::$model::STATUS),
 
-
-
-                // TextColumn::make('status')
-                // ->badge()
-                // ->colors ([
-                //     'success' => Ticket::STATUS['Closed'],
-                //     'warning' => Ticket::STATUS['Archived'],
-                //     'danger' => Ticket::STATUS['Open'],
-                // ]),
-
                 TextColumn::make('priority')->badge()
                 ->colors ([
                     'success' => Ticket::PRIORITY['Low'],
